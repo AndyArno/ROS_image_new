@@ -97,7 +97,7 @@ class RefactoredPointTransformer:
             #rospy.loginfo(f"激光雷达距离: {real_lidar_dis:.4f} m | 像素反算距离: {virtual_lidar_dis:.4f} m")
 
             if virtual_lidar_dis > 1e-6:
-                #scale = real_lidar_dis / virtual_lidar_dis
+                # scale = real_lidar_dis / virtual_lidar_dis
                 # =======================【缩放倍数校验】=======================
                 # a. 先计算出当前的scale值
                 current_scale = real_lidar_dis / virtual_lidar_dis
@@ -131,7 +131,8 @@ class RefactoredPointTransformer:
                 final_point = tf2_geometry_msgs.do_transform_point(real_lidar_point, transform_laser_to_base)
 
                 self.base_point_pub.publish(final_point)
-                rospy.loginfo(f"距小车中心: {final_point.point.x:.4f} m | 缩放后坐标: x={real_lidar_point.point.x:.4f}, y={real_lidar_point.point.y:.4f}, z={real_lidar_point.point.z:.4f} | 缩放前坐标: x={point_in_laser.point.x:.4f}, y={point_in_laser.point.y:.4f}, z={point_in_laser.point.z:.4f}")
+                #rospy.loginfo(f"距小车中心: {final_point.point.x:.4f} m | 缩放后坐标: x={real_lidar_point.point.x:.4f}, y={real_lidar_point.point.y:.4f}, z={real_lidar_point.point.z:.4f} | 缩放前坐标: x={point_in_laser.point.x:.4f}, y={point_in_laser.point.y:.4f}, z={point_in_laser.point.z:.4f}")
+                rospy.loginfo(f"距小车中心: {final_point.point.x:.4f} m")
 
         except tf2_ros.TransformException as e:
             rospy.logwarn(f"坐标变换失败: {e}")
