@@ -74,14 +74,14 @@ class RefactoredPointTransformer:
         try:
             transform_cam_to_laser = self.tf_buffer.lookup_transform(
                 self.lidar_frame, msg.header.frame_id, rospy.Time(0), rospy.Duration(0.1)
-            )
+            )# 查询cam到lidar的变换关系
 
-            point_in_laser = tf2_geometry_msgs.do_transform_point(msg, transform_cam_to_laser)
+            point_in_laser = tf2_geometry_msgs.do_transform_point(msg, transform_cam_to_laser) # 将点从相机坐标系转换到激光雷达坐标系
 
-            angle = np.arctan2(point_in_laser.point.y, point_in_laser.point.x)
+            angle = np.arctan2(point_in_laser.point.y, point_in_laser.point.x) 
 
             angle_index = int((angle + self.angle_comp) / self.lidar_data.angle_increment)
-            angle_index = max(0, min(angle_index, len(self.lidar_data.ranges) - 1))
+            angle_index = max(0, min(angle_index, len(self.lidar_data.ranges) - 1)) # 限制索引在有效范围内
 
             if angle_index == self.special_idx:
                 real_lidar_dis = self.special_dist
