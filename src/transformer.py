@@ -71,12 +71,10 @@ class RefactoredPointTransformer:
             return
 
         try:
-            # ====================【修改点 1】====================
-            # 将 msg.header.stamp 修改为 rospy.Time(0) 来获取最新的坐标变换
             transform_cam_to_laser = self.tf_buffer.lookup_transform(
                 self.lidar_frame, msg.header.frame_id, rospy.Time(0), rospy.Duration(0.1)
             )
-            # ====================================================
+
             point_in_laser = tf2_geometry_msgs.do_transform_point(msg, transform_cam_to_laser)
 
             angle = np.arctan2(point_in_laser.point.y, point_in_laser.point.x)
@@ -105,12 +103,9 @@ class RefactoredPointTransformer:
                 real_lidar_point.point.y = point_in_laser.point.y * scale
                 real_lidar_point.point.z = point_in_laser.point.z * scale
 
-                # ====================【修改点 2】====================
-                # 将 msg.header.stamp 修改为 rospy.Time(0) 来获取最新的坐标变换
                 transform_laser_to_base = self.tf_buffer.lookup_transform(
                     self.base_frame, self.lidar_frame, rospy.Time(0), rospy.Duration(0.1)
                 )
-                # ====================================================
                 final_point = tf2_geometry_msgs.do_transform_point(real_lidar_point, transform_laser_to_base)
 
                 self.base_point_pub.publish(final_point)
