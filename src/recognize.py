@@ -4,6 +4,7 @@
 import rospy
 import numpy as np
 import cv2
+import time
 from cv_bridge import CvBridge, CvBridgeError
 from ultralytics import YOLO
 from sensor_msgs.msg import Image
@@ -65,6 +66,22 @@ class RefactoredYOLODetector:
         
         # 2. YOLO推理
         results = self.yolo_model(undistorted_image, verbose=False)
+        # # =======================【显示YOLO推理时间】=======================
+        # # a. 在调用YOLO模型前，记录开始时间
+        # start_time = time.time()
+
+        # # 2. YOLO推理
+        # results = self.yolo_model(undistorted_image, verbose=False)
+
+        # # b. 在YOLO模型返回结果后，记录结束时间
+        # end_time = time.time()
+        
+        # # c. 计算时间差（单位：秒），并转换为毫秒
+        # inference_time_ms = (end_time - start_time) * 1000
+        
+        # # d. 在终端打印出本次的推理耗时
+        # rospy.loginfo(f"YOLO 推理时间: {inference_time_ms:.2f} ms")
+        # # =======================【修改结束】=======================
         
         # 3. 处理并发布结果
         if results and results[0].boxes:
