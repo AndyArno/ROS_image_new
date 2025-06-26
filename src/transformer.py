@@ -23,6 +23,7 @@ class RefactoredPointTransformer:
         self.tf_listener = tf2_ros.TransformListener(self.tf_buffer)
 
         self.lidar_data = None
+        self.last_scale = None
 
         # 订阅与发布
         self.point_sub = rospy.Subscriber(self.input_point_topic, PointStamped, self.point_callback)
@@ -96,7 +97,28 @@ class RefactoredPointTransformer:
             #rospy.loginfo(f"激光雷达距离: {real_lidar_dis:.4f} m | 像素反算距离: {virtual_lidar_dis:.4f} m")
 
             if virtual_lidar_dis > 1e-6:
-                scale = real_lidar_dis / virtual_lidar_dis
+                #scale = real_lidar_dis / virtual_lidar_dis
+                # =======================【缩放倍数校验】=======================
+                # a. 先计算出当前的scale值
+                current_scale = real_lidar_dis / virtual_lidar_dis
+                
+                # b. 如果不是第一次运行，则进行检查
+                if self.last_scale is not None:
+                    # c. 如果变化过大，则打印警告并沿用旧值
+                    if abs(current_scale - self.last_scale) > 1.3:
+                        rospy.logwarn_throttle(2, f"激光雷达在索引 {angle_index} 处距离无效，跳过。")
+                        scale = self.last_scale
+                    # d. 如果变化在接受范围内，则更新scale值
+                    else:
+                        scale = current_scale
+                        self.last_scale = scale # 只有在变化不大时才更新
+                # e. 如果是第一次运行，则直接使用当前值
+                else:
+                    scale = current_scale
+                    self.last_scale = scale
+                # ===============================================================
+                
+                
                 real_lidar_point = PointStamped()
                 real_lidar_point.header = point_in_laser.header
                 real_lidar_point.point.x = point_in_laser.point.x * scale
