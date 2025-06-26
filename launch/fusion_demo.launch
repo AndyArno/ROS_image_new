@@ -13,6 +13,6 @@
 
     <!-- <node pkg="rviz" type="rviz" name="rviz" /> -->
 
-    <node pkg="rosbag" type="play" name="player"  args="-r 0.75 --clock -l $(arg bag_path)" />
+    <node pkg="rosbag" type="play" name="player"  args="-r 2 --clock -l $(arg bag_path)" />
 
 </launch>
