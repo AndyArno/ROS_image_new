@@ -1,0 +1,41 @@
+# ==========================================================
+# 这是修正后的 fusion_params.yaml
+# 我们移除了顶层的 "recognize_node:" 和 "transformer_node:"
+# ==========================================================
+
+# 识别节点 (recognize_node) 参数
+image_topic: "/usb_cam/image_raw"
+yolo_model_path: "/home/arno/ROS/my_ws/src/image_new/src/best.pt"
+output_optical_point_topic: "/camera_optical_point"
+output_pixel_point_topic: "/pixel_point"
+visualize: true
+
+# 相机标定参数
+camera_info:
+  optical_frame_id: "camera_depth_optical_frame"
+  width: 640
+  height: 480
+  camera_matrix:
+    rows: 3
+    cols: 3
+    data: [401.983910, 0.0, 321.568968, 0.0, 402.708496, 243.870700, 0.0, 0.0, 1.0]
+  distortion_model: "plumb_bob"
+  distortion_coefficients:
+    rows: 1
+    cols: 5
+    data: [-0.019552, -0.001977, 0.006495, -0.002083, 0.000000]
+
+# 变换与融合节点 (transformer_node) 参数
+lidar_topic: "/scan"
+input_point_topic: "/camera_optical_point"
+output_base_point_topic: "/base_point"
+
+# 坐标系名称
+base_frame: "base_link"
+lidar_frame: "laser"
+camera_optical_frame: "camera_depth_optical_frame"
+
+# 补偿参数
+angle_compensation: 0.760577
+special_angle_index: 335
+special_distance: 1.6699999570846558

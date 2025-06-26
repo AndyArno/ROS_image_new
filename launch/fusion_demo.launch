@@ -1,0 +1,18 @@
+<launch>
+    <arg name="bag_path" default="$(env HOME)/ROS/all_topics.bag" />
+
+    <param name="/use_sim_time" value="true" />
+
+    <node pkg="image_new" type="recognize.py" name="recognize_node" output="screen">
+        <rosparam command="load" file="$(find image_new)/config/fusion_params.yaml" />
+    </node>
+
+    <node pkg="image_new" type="transformer.py" name="transformer_node" output="screen">
+        <rosparam command="load" file="$(find image_new)/config/fusion_params.yaml" />
+    </node>
+
+    <!-- <node pkg="rviz" type="rviz" name="rviz" /> -->
+
+    <node pkg="rosbag" type="play" name="player"  args="-r 0.75 --clock -l $(arg bag_path)" />
+
+</launch>
